@@ -19,6 +19,8 @@ I shall be adding a splash screen for free use.
 
 The planned modules are as follows (please note this is subject to change any time):
 Please follow the planned structure for any additions. Contact me (https://github.com/satrugha) with any questions.
+
+
 Waisy.core - all core functionalities required for any style game (planned)
 - .core - includes base functionalities, including generic game loop and state handling
 - .file - xml file handling and loading
