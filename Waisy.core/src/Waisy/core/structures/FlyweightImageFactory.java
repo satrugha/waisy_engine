@@ -35,6 +35,7 @@ import Waisy.core.graphics.BasicSprite;
  * 
  * @author waisy
  * @see http://en.wikipedia.org/wiki/Flyweight_pattern
+ * @see http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html
  */
 public class FlyweightImageFactory 
 {

@@ -51,29 +51,17 @@ import Waisy.core.core.GameSettings;
  * @author waisy
  */
 public class SpriteManager 
-{
-//	/**
-//	 * This class is a singleton. Hold a reference
-//	 * to the instance of the class
-//	 */
-//	private static SpriteManager instance = null;
-	
+{	
 	
 	//TODO: add parallax element(s)
 	
 	/**
-	 * Static, unpannable background.
+	 * Static, unpannable background. Background will
+	 * update with manager's main update loop if it
+	 * is a valid sprite. This allows for animated
+	 * backgrounds.
 	 */
 	protected BasicSprite staticBackground = null;
-	
-	/**
-	 * if you want a static color in the background
-	 * (think SMB1 with its standard one-color background),
-	 * set this to true and the renderer will draw a primitive
-	 * rectangle covering the entire screen 
-	 * in the background of your game.
-	 */
-	protected boolean staticBackgroundColor = false;
 	
 	
 	/**
@@ -97,18 +85,6 @@ public class SpriteManager
 		spriteList.add(new Vector<BasicSprite>(5,5)); //midground
 		spriteList.add(new Vector<BasicSprite>(2,2)); //foreground
 	}
-	
-//	
-//	/**
-//	 * return an instance to the sprite manager
-//	 */
-//	public static SpriteManager getInstance()
-//	{
-//		if (instance == null)
-//			instance = new SpriteManager();
-//		
-//		return instance;
-//	}
 	
 	
 	/**
@@ -148,6 +124,22 @@ public class SpriteManager
 	
 	
 	/**
+	 * tells the renderer to render the static background.
+	 * The renderer will let the sprite do all the placement
+	 * calculations. The renderer will also call update
+	 * on this sprite if you want to create animated static
+	 * backgrounds for your game.
+	 * 
+	 * @param bkg Sprite to render as the background. Set this to
+	 * null to remove the static background.
+	 */
+	public void setStaticBackground(BasicSprite bkg)
+	{
+		staticBackground = bkg;
+	}
+	
+	
+	/**
 	 * Render the available sprites.
 	 * Rendering is done using the painter's algorithm,
 	 * which means back to front. Anything wholly offscreen
@@ -156,34 +148,14 @@ public class SpriteManager
 	 */
 	public void renderList(Graphics g)
 	{
-		//render the static color first
-		if (staticBackgroundColor)
-		{
-			//cast into Graphics2D else we won't
-			//be able to use geometric primitives
-			Graphics2D g2d = (Graphics2D) g;
-			Color c = g2d.getColor();
-			
-			//set the paint color
-			g2d.setColor(GameSettings.COLOR_BACKGROUND);
-			
-			//fill the entire background
-			g2d.fill(new Rectangle2D.Double(0,0,
-					GameSettings.SCREEN_WIDTH,
-					GameSettings.SCREEN_HEIGHT));
-			
-			//reset paint color
-			g2d.setColor(c);
-		}
-		
-		//then render the static background
+		//render the static background
 		if (staticBackground != null)
 			staticBackground.paint(g);
 		
 		//TODO: render background parallax
 		
 		//render the sprite list
-		for (int i = 0; i < spriteList.capacity(); i++)
+		for (int i = 0; i < spriteList.size(); i++)
 		{
 			//if there are no sprites in the list,
 			//simply jump to the next one in the masterlist.
@@ -208,6 +180,30 @@ public class SpriteManager
 	
 	public void updateList(float dT)
 	{
+		if (staticBackground != null)
+			staticBackground.update(dT);
 		
+		//TODO: update parallax
+
+		//update the sprite list
+		for (int i = 0; i < spriteList.size(); i++)
+		{
+			//if there are no sprites in the list,
+			//simply jump to the next one in the masterlist.
+			if (spriteList.get(i).size() < 1)
+				continue;
+			
+			for (int j = 0; j < spriteList.get(i).size(); j++)
+			{
+				BasicSprite s = spriteList.get(i).get(j);
+				if (s != null)
+				{
+					//TODO: add off-screen check
+					
+					//this is a valid, on-screen sprite
+					spriteList.get(i).get(j).update(dT);
+				}
+			}
+		}
 	}
 }

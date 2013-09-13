@@ -14,6 +14,10 @@ import javax.imageio.ImageIO;
  * BasicSprite currently uses a BufferedImage, loaded through
  * ImageIO, which has built-in support for GIF, PNG, JPEG,
  *  BMP, and WBMP. 
+ *  
+ * Currently BasicSprite allows for transparent backgrounds in 
+ * the original file. 
+ * TODO: setting visible colors to be rendered as transparent.
  * @author waisy
  *
  */
@@ -101,5 +105,18 @@ public class BasicSprite extends Object
 		//ignore because we have no need to track image loading.
 		//(it is primarily used for loading over the internet)
 		g.drawImage(sprite, (int)x, (int)y, null);
+	}
+	
+	
+	/**
+	 * update the sprite according to time changed since last update.
+	 * For the base sprite, this is an empty function. For child classes,
+	 * use this function to update anything which requires timing, including
+	 * scripted AI, movement, rotations, and animation.
+	 * @param dT
+	 */
+	public void update(float dT)
+	{
+		
 	}
 }
