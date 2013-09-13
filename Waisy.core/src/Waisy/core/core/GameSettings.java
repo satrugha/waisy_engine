@@ -2,6 +2,8 @@ package Waisy.core.core;
 
 import java.awt.Color;
 
+import Waisy.core.structures.FlyweightImageFactory;
+
 /**
  * This is a class of static variables for settings which 
  * can be referenced throughout the game. For custom settings, 
@@ -18,4 +20,7 @@ public class GameSettings
 	//color settings
 	public static Color COLOR_BACKGROUND = Color.black;
 	public static Color COLOR_FONT = Color.black;
+	
+	//main manager references, for those which are not singletons
+	public static FlyweightImageFactory imageFactory = new FlyweightImageFactory();
 }
