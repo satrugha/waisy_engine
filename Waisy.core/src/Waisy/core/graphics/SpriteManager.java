@@ -93,9 +93,9 @@ public class SpriteManager
 	{
 		spriteList = new Vector<Vector<BasicSprite>>(3);
 		//contructor: Vector(int size, int increment)
-		spriteList.add(new Vector<BasicSprite>(1,2)); //background
+		spriteList.add(new Vector<BasicSprite>(2,2)); //background
 		spriteList.add(new Vector<BasicSprite>(5,5)); //midground
-		spriteList.add(new Vector<BasicSprite>(1,2)); //foreground
+		spriteList.add(new Vector<BasicSprite>(2,2)); //foreground
 	}
 	
 //	
@@ -187,15 +187,19 @@ public class SpriteManager
 		{
 			//if there are no sprites in the list,
 			//simply jump to the next one in the masterlist.
-			if (spriteList.get(i).capacity() < 1)
+			if (spriteList.get(i).size() < 1)
 				continue;
 			
-			for (int j = 0; j < spriteList.get(i).capacity(); j++)
+			for (int j = 0; j < spriteList.get(i).size(); j++)
 			{
-				//TODO: add off-screen check
-				
-				//this is a valid, on-screen sprite
-				spriteList.get(i).get(j).paint(g);
+				BasicSprite s = spriteList.get(i).get(j);
+				if (s != null)
+				{
+					//TODO: add off-screen check
+					
+					//this is a valid, on-screen sprite
+					spriteList.get(i).get(j).paint(g);
+				}
 			}
 		}
 		
