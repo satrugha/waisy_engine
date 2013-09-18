@@ -36,6 +36,7 @@ Waisy.core - all core functionalities required for any style game (planned)
 - .worldhandler - handles loading and managing of levels and worlds
 - tbd
 
+
 Waisy.platformer - 2D platformer game engine (planned)
 - .core - includes basic core functionalities
 - .ai - basic enemy ai
@@ -45,13 +46,17 @@ Waisy.platformer - 2D platformer game engine (planned)
 - .player - specifics for a player character, including all animations, actions, sound effects, etc
 - tbd
 
+
 Waisy.platformer.extendedAI - customized AI algorithms for boss battles and more complex enemies
 This will be included as a separate module in case programmers wish to not include it
+
 
 Waisy.overworld - a basic world map handler and editor (planned)
 Includes various formats. Planned to be skinnable.
 
+
 Waisy.convo - a conversation engine for scripted cutscenes and interactions
+
 
 Waisy.minigames - an enveloping module set of mini games.
 This will be broken into sub-modules as needed.
@@ -61,7 +66,9 @@ Planned minigames are:
 - Mini boss battle (Minigame from overworld map)
 
 
+
 Waisy.match3 - a match3 engine
+
 
 Waisy.rpg - a highly tentative rpg engine
 
