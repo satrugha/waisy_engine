@@ -1,12 +1,7 @@
 package Waisy.core.graphics;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.Rectangle2D;
 import java.util.Vector;
-
-import Waisy.core.core.GameSettings;
 
 /**
  * This is the most basic renderer used within the engine.
@@ -72,8 +67,10 @@ public class SpriteManager
 	//TODO: foreground parallax?
 	
 	public static final int BACKGROUND = 0;
-	public static final int MIDGROUND = 1;
-	public static final int FOREGROUND = 2;
+	public static final int MIDGROUND_ENVIRONMENT = 1;
+	public static final int ENEMIES = 2;
+	public static final int CHARACTERS = 3;
+	public static final int FOREGROUND = 4;
 	
 	
 
@@ -82,7 +79,13 @@ public class SpriteManager
 		spriteList = new Vector<Vector<BasicSprite>>(3);
 		//contructor: Vector(int size, int increment)
 		spriteList.add(new Vector<BasicSprite>(2,2)); //background
-		spriteList.add(new Vector<BasicSprite>(5,5)); //midground
+		
+		//midground will probably hold more sprites so we give
+		//a larger increment and size to layers with larger requirements
+		spriteList.add(new Vector<BasicSprite>(5,5)); //midground environment
+		spriteList.add(new Vector<BasicSprite>(5,5)); //enemy list
+		spriteList.add(new Vector<BasicSprite>(2,2)); //character/player list
+		
 		spriteList.add(new Vector<BasicSprite>(2,2)); //foreground
 	}
 	
@@ -102,26 +105,7 @@ public class SpriteManager
 		{
 			spriteList.get(layer).addElement(s);
 		}
-	}
-	
-	/**
-	 * Add the player character to the front of the 
-	 * render list. Doing this will update the player 
-	 * and all calculations before calculating anything
-	 * else.
-	 * @param s Player object
-	 */
-	public void addPlayerCharacter(BasicSprite s)
-	{
-		if ((s != null)
-				&& (spriteList != null)
-				&& (spriteList.get(SpriteManager.MIDGROUND) != null))
-			//safety check
-		{
-			spriteList.get(SpriteManager.MIDGROUND).add(0, s);
-		}
-	}
-	
+	}	
 	
 	/**
 	 * tells the renderer to render the static background.
@@ -130,8 +114,7 @@ public class SpriteManager
 	 * on this sprite if you want to create animated static
 	 * backgrounds for your game.
 	 * 
-	 * @param bkg Sprite to render as the background. Set this to
-	 * null to remove the static background.
+	 * @param bkg 
 	 */
 	public void setStaticBackground(BasicSprite bkg)
 	{
