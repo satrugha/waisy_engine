@@ -58,6 +58,15 @@ public class BasicGameState
 		state = STATE_INVALID;
 	}
 	
+	/**
+	 * checks to see if the state is in a valid state
+	 * @return true if the state is NOT invalid or ended
+	 */
+	public boolean isStateValid()
+	{
+		return ((state != STATE_INVALID) && (state != STATE_ENDED));
+	}
+	
 	//----------------- state management
 	
 	/**

@@ -6,12 +6,12 @@ import Waisy.core.error.GameManagerUninitializedError;
 import Waisy.core.graphics.BasicSprite;
 import Waisy.core.graphics.SpriteManager;
 import Waisy.core.structures.BasicGameState;
-
 /**
  * 
  * @author waisy
  *
  */
+
 public class GameManager 
 {
 	/**
@@ -24,8 +24,10 @@ public class GameManager
 	 */
 	protected long previoustime = 0;
 	
-	//TEMPORARY for testing. will be changed into state management
-	protected SpriteManager mgr;
+	/**
+	 * is the game manager currently paused?
+	 */
+	protected boolean isPaused = false;
 	
 	/**
 	 * The active state in the game
@@ -93,8 +95,31 @@ public class GameManager
 	 */
 	public void Start(BasicGameState state)
 	{
-		//adjust the update clock
-		setUpdateTime();
+		//if the parameter is null OR the current state has not been set
+		//send it off to setStartingState to create one.
+		if ((state != null) || (currState == null))
+			setStartingState(state);
+		Start();
+	}
+	
+	/**
+	 * If you wish to set up the game state and start the 
+	 * game manager at different times, first use setStartingState
+	 * then Start() (no parameters). If you want to do both steps as one,
+	 * and you plan on using the GameManager right afterwards, then use
+	 * Start(state);
+	 * 
+	 * You would wish to do both steps separately if you plan on setting
+	 * up the states but not starting the update process until later.
+	 * @param state starting game state. set to null if you wish to start
+	 * with a generic BasicGameState.
+	 */
+	public void setStartingState(BasicGameState state)
+	{
+		if(currState != null) //safety check
+			currState.end();
+		if (prevState != null)
+			prevState.end();
 		
 		//add a gamestate
 		if (state == null)
@@ -104,8 +129,95 @@ public class GameManager
 		//set state variables
 		currState = state;
 		prevState = null;
-		//start the current state
+		
+		//start the state
 		currState.start();
+	}
+	
+	/**
+	 * starts the current state and the update clock. Call
+	 * setStartingState(state) before this function. If there is
+	 * no starting state set, the GameManager will create and use
+	 * a generic BasicGameState.
+	 */
+	public void Start()
+	{
+		//always ensure a state is present.
+		if (currState == null)
+		{
+			currState = new BasicGameState();
+			currState.start();
+		}
+		
+		//if the state isn't started, make sure to start it up.
+		//if you start updating with an unstarted state, the game
+		//will throw errors all over the place.
+		if (!currState.isStateValid())
+			currState.start();
+		
+		//correct the update time variable to ensure that 
+		//deltaTime used with the update function is correctly set.
+		setUpdateTime();
+	}
+	
+	/**
+	 * retrieve the current game state. 
+	 * 
+	 * WARNING: Ending a state through anything
+	 * other than a state manager or the GameManager can 
+	 * yield unpredictable results.
+	 * @return The current state or null if one has not been set
+	 */
+	public BasicGameState getCurrentGameState()
+	{
+		return currState;
+	}
+	
+	//------------ pause & resume
+	
+	/**
+	 * Pauses the entire game. When paused, the game will not update
+	 * but it is capable of rendering. Only use this function to pause
+	 * EVERYTHING, not for a "game pause." Prime example for using this
+	 * is when the user clicks away from the window and you want to 
+	 * pause updates to free up memory for whatever else the user 
+	 * is doing.
+	 * 
+	 * for game pausing, use pauseCurrentState();
+	 */
+	public void Pause()
+	{
+		isPaused = true;
+		currState.pause();
+	}
+	
+	/**
+	 * Resume the game from a paused state. Use this for unpausing
+	 * EVERYTHING. This also corrects the update time. for unpausing a
+	 * game pause, use resumeCurrentState();
+	 */
+	public void Resume()
+	{
+		isPaused=false;
+		currState.resume();
+		setUpdateTime();
+	}
+	
+	/**
+	 * pauses the current and active state. A paused state will not
+	 * update but it will render. This is equivalent of a game pause.
+	 */
+	public void pauseCurrentState()
+	{
+		currState.pause();
+	}
+	
+	/**
+	 * resume normal operations of the current state.
+	 */
+	public void resumeCurrentState()
+	{
+		currState.resume();
 	}
 	
 	//-------------- updating
@@ -118,6 +230,9 @@ public class GameManager
 	 */
 	public void update()
 	{
+		if (isPaused)
+			return;
+		
 		//calculate delta time since our last update
 		long currtime = System.currentTimeMillis();
 		float dT = (float) (currtime - previoustime);
@@ -136,7 +251,7 @@ public class GameManager
 	 * adjusts the update time (used to calculate delta time)
 	 * to the current system time
 	 */
-	public void setUpdateTime()
+	protected void setUpdateTime()
 	{
 		previoustime = System.currentTimeMillis();
 	}
