@@ -127,6 +127,7 @@ public class BasicGameLoop implements Runnable
 			framesSkipped = 0;	// resetting the frames skipped
 			// update game state 
 			GameManager.getInstance().render(g);
+			g.dispose();
 			// render state to the screen
 			// draws the canvas on the panel
 			GameManager.getInstance().update();				

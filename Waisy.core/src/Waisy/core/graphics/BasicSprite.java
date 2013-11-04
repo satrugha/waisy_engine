@@ -27,11 +27,13 @@ public class BasicSprite extends Object
 	 * The image itself. Currently this is a buffered image,
 	 * as that has most of the features required for a sprite.
 	 */
-	protected BufferedImage sprite;
+	protected BufferedImage sprite = null;
 
 	//keep float for location for better calculations of movement.
 	protected float x = 0f;
 	protected float y = 0f;
+	
+	protected boolean visible = true;
 	
 	public BasicSprite()
 	{
@@ -104,7 +106,8 @@ public class BasicSprite extends Object
 		//the null is the ImageObserver, which we can
 		//ignore because we have no need to track image loading.
 		//(it is primarily used for loading over the internet)
-		g.drawImage(sprite, (int)x, (int)y, null);
+		if (visible)
+			g.drawImage(sprite, (int)x, (int)y, null);
 	}
 	
 	
